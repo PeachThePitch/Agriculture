@@ -13,12 +13,14 @@
 						<thead>
 							<tr class="fw-bold text-primary">
 								<th scope="col">Unité</th>
+                                <th scope="col"></th>
 							</tr>
 						</thead>
 						<tbody>
 							{% for unite in unites %}
 								<tr class="{{ cycle(['table-primary', 'table-secondary'], loop.index0) }}">
 									<td>{{ unite.unite | capitalize }}</td>
+                                    <td><a href="{{path("app_modifier_unite",{'id':unite.id})}}"><i class="bi bi-pen-fill text-dark"></i></a></td>
 								</tr>
 							{% endfor %}
 						</tbody>

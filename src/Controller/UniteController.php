@@ -2,10 +2,11 @@
 
 namespace App\Controller;
 
+use App\Repository\UniteRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use App\Repository\UniteRepository;
+use App\Entity\Unite;
 
 final class UniteController extends AbstractController
 {
@@ -14,7 +15,14 @@ final class UniteController extends AbstractController
     {
         $unites = $uniteRepository->findAll();
         return $this->render('unite/liste_unite.html.twig', [
-            'unites' => $unites
+            'unites' => $unites,
+        ]);
+    }
+
+    #[Route('/modifier-unite/{id}', name: 'app_modifier_unite')]
+    public function modifierUnite(): Response
+    {
+        return $this->render('unite/modifier-unite.html.twig', [
         ]);
     }
 }
