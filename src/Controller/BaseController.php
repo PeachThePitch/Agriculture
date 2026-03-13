@@ -29,7 +29,7 @@ class BaseController extends AbstractController
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-                $em->persist($contact);
+                $em->persist($parcelle);
                 $em->flush();
                 $this->addFlash('notice', 'Formulaire envoyé');
                 return $this->redirectToRoute('app_parcelle');

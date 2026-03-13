@@ -16,16 +16,15 @@
                                         <th scope="col">Nom</th>
                                         <th scope="col">Surface</th>
                                         <th scope="col">Coordonnées</th>
-                                        <th scope="col">Date d'envoi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for parcelle in parcelles |sort((a, b) => b.dateEnvoi <=> a.dateEnvoi) %}
+                                    {% for parcelle in parcelles %}
                                         <tr class="{{ cycle(['table-primary','table-secondary'], loop.index0) }}">
                                             <td>{{ parcelle.nom | capitalize }}</td>
                                             <td>{{ parcelle.surface | capitalize }}</td>
                                             <td>{{ parcelle.coordonnees | lower }}</td>
-                                            <td>{{ parcelle.dateEnvoi | date("d-m-Y à H:i:s") }}</td>
+                                            
 
                                         </tr>
                                     {% endfor %}
