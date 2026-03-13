@@ -1,27 +1,18 @@
 <?php
 namespace App\Controller;
 
-<<<<<<< HEAD
-use App\Form\DateeType;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
-use App\Entity\Date;
-use Doctrine\ORM\EntityManagerInterface;
-=======
 use App\Entity\Unite;
 use App\Form\UniteType;
 use App\Entity\Parcelle;
 use App\Form\ParcelleType;
+use App\Form\DateeType;
+use App\Entity\Date;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\ParcelleRepository;
-
->>>>>>> 998c7452c3c4aaceba15821ffb08f57734f795d0
 
 class BaseController extends AbstractController
 {
@@ -30,7 +21,6 @@ class BaseController extends AbstractController
     {
         return $this->render('base/index.html.twig', [
         ]);
-<<<<<<< HEAD
     }
     #[Route('/ajoutdate', name: 'app_ajout_date')] // /base est l’URL de la page, name est le nom de la route
     public function ajoutdate(Request $request, EntityManagerInterface $em): Response
@@ -49,7 +39,6 @@ class BaseController extends AbstractController
         return $this->render('base/ajoutdate.html.twig', [
             'form' => $form->createView(),
         ]);
-=======
     }
 
     #[Route('/unite', name: 'app_unite')]
@@ -101,6 +90,5 @@ class BaseController extends AbstractController
 
 
         ]);
->>>>>>> 998c7452c3c4aaceba15821ffb08f57734f795d0
     }
 }

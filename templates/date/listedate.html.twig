@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{parent()}}Listes des dates
+{% endblock %}
+{% block body %}
+	<div class="container-fluid">
+		<h1 class="text-center text-primary mt-4 pt-4 display-1 fw-bold">Listes des dates</h1>
+		<div class="row justify-content-center">
+			<div class="col-12 col-md-8 p-4 m-0 text-primary">
+				<div class="table-responsive">
+					{{ form_start(form) }}
+					<table class="table table-hover">
+						<thead>
+							<tr class="fw-bold text-primary">
+								<th scope="col">dates</th>
+								<th scope="col"></th>
+								<th scope="col"></th>
+								<th scope="col"></th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for date in date |sort((a,b)=>b.date<=>a.date) %}
+								<tr class="{{ cycle(['table-primary', 'table-secondary'], loop.index0) }}">
+									<td>{{ date.date |date("d-m-Y") }}</td>
+									<td>
+										<a href="{{path("app_modifier_date", {'id':date.id})}}">
+											<i class="bi bi-pen-fill text-dark"></i>
+										</a>
+									</td>
+									<td>
+										<a href="{{path("app_supprimer_date",{'id':date.id})}}">
+											<i class="bi bi-trash-fill text-dark"></i>
+										</a>
+									</td>
+									<td>{{ form_widget(form.date[date.id]) }}</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+					{{ form_widget(form.supprimer) }}
+					{{ form_end(form) }}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
