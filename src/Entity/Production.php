@@ -2,32 +2,30 @@
 
 namespace App\Entity;
 
-use App\Repository\ParcelleRepository;
+use App\Repository\ProductionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: ParcelleRepository::class)]
-class Parcelle
+#[ORM\Entity(repositoryClass: ProductionRepository::class)]
+class Production
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?float $surface = null;
+    #[ORM\Column(length: 255)]
+    private ?string $nomProduction = null;
 
-    #[ORM\Column(length: 100)]
-    private ?string $nom = null;
-
-    #[ORM\Column(length: 50)]
-    private ?string $coordonnees = null;
+    #[ORM\ManyToOne(inversedBy: 'productions')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Unite $unite = null;
 
     /**
      * @var Collection<int, Culture>
      */
-    #[ORM\OneToMany(targetEntity: Culture::class, mappedBy: 'parcelle', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Culture::class, mappedBy: 'production')]
     private Collection $cultures;
 
     public function __construct()
@@ -40,38 +38,26 @@ class Parcelle
         return $this->id;
     }
 
-    public function getSurface(): ?float
+    public function getNomProduction(): ?string
     {
-        return $this->surface;
+        return $this->nomProduction;
     }
 
-    public function setSurface(float $surface): static
+    public function setNomProduction(string $nomProduction): static
     {
-        $this->surface = $surface;
+        $this->nomProduction = $nomProduction;
 
         return $this;
     }
 
-    public function getNom(): ?string
+    public function getUnite(): ?Unite
     {
-        return $this->nom;
+        return $this->unite;
     }
 
-    public function setNom(string $nom): static
+    public function setUnite(?Unite $unite): static
     {
-        $this->nom = $nom;
-
-        return $this;
-    }
-
-    public function getCoordonnees(): ?string
-    {
-        return $this->coordonnees;
-    }
-
-    public function setCoordonnees(string $coordonnees): static
-    {
-        $this->coordonnees = $coordonnees;
+        $this->unite = $unite;
 
         return $this;
     }
@@ -88,7 +74,7 @@ class Parcelle
     {
         if (!$this->cultures->contains($culture)) {
             $this->cultures->add($culture);
-            $culture->setParcelle($this);
+            $culture->setProduction($this);
         }
 
         return $this;
@@ -98,8 +84,8 @@ class Parcelle
     {
         if ($this->cultures->removeElement($culture)) {
             // set the owning side to null (unless already changed)
-            if ($culture->getParcelle() === $this) {
-                $culture->setParcelle(null);
+            if ($culture->getProduction() === $this) {
+                $culture->setProduction(null);
             }
         }
 
