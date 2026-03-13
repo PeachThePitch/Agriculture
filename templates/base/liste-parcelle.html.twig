@@ -1,41 +1,58 @@
 {% extends 'base.html.twig' %}
-    {% block title %}
-    {{parent()}} Parcelle
-    {% endblock %}
-    {% block body %}
-    <div class="container-fluid">
-        <div class="row justify-content-center">
-            <div class="col-10 text-primary">
-                <h1 class="text-center text-primary mt-4 pt-4 display-1 fw-bold">Liste des Parcelles</h1>
-                <div class="row justify-content-center">
-                    <div class="col-12 col-md-8 bg-white p-4 m-0 text-primary">
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr class="fw-bold text-primary">
-                                        <th scope="col">Nom</th>
-                                        <th scope="col">Surface</th>
-                                        <th scope="col">Coordonnées</th>
-                                        <th scope="col"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for parcelle in parcelles %}
-                                        <tr class="{{ cycle(['table-primary','table-secondary'], loop.index0) }}">
-                                            <td>{{ parcelle.nom | capitalize }}</td>
-                                            <td>{{ parcelle.surface | capitalize }}</td>
-                                            <td>{{ parcelle.coordonnees | lower }}</td>
-                                            <td><a href="{{path("app_modifier_parcelle",{'id':parcelle.id})}}"><i class="bi bi-pen-filltext-dark"></i></a></td>
+{% block title %}
+	{{parent()}}
+	Parcelle
+{% endblock %}
+{% block body %}
+	<div class="container-fluid">
+		<div class="row justify-content-center">
+			<div class="col-10 text-primary">
+				<h1 class="text-center text-primary mt-4 pt-4 display-1 fw-bold">Liste des Parcelles</h1>
+				<div class="row justify-content-center">
+					<div class="col-12 col-md-8 bg-white p-4 m-0 text-primary">
+						<div class="table-responsive">
+							<table class="table table-hover">
+								<thead>
+									<tr class="fw-bold text-primary">
+										<th scope="col">Nom</th>
+										<th scope="col">Surface</th>
+										<th scope="col">Coordonnées</th>
+										<th scope="col"></th>
+										<th scope="col"></th>
+										<th scope="col"></th>
 
 
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endblock %}
+									</tr>
+								</thead>
+								<tbody>
+									{% for parcelle in parcelles %}
+										<tr class="{{ cycle(['table-primary','table-secondary'], loop.index0) }}">
+											<td>{{ parcelle.nom | capitalize }}</td>
+											<td>{{ parcelle.surface | capitalize }}</td>
+											<td>{{ parcelle.coordonnees | lower }}</td>
+											<td>
+												<a href="{{path("app_modifier_parcelle",{'id':parcelle.id})}}">
+													<i class="bi bi-pen-fill text-dark"></i>
+												</a>
+											</td>
+											<td>
+												<a href="{{path("app_supprimer_parcelle",{'id':parcelle.id})}}">
+													<i class="bi bi-trash-fill text-dark"></i>
+												</a>
+											</td>
+											<td>{{ form_widget(form.parcelles[parcelle.id]) }}</td>
+
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+							{{ form_widget(form.supprimer) }}
+							{{ form_end(form) }}
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
