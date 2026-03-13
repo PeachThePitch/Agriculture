@@ -1,17 +1,17 @@
 <?php
 namespace App\Controller;
 
-use App\Entity\Unite;
-use App\Form\UniteType;
 use App\Entity\Parcelle;
+use App\Entity\Unite;
 use App\Form\ParcelleType;
+use App\Form\SupprimerParcelleType;
+use App\Form\UniteType;
+use App\Repository\ParcelleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Repository\ParcelleRepository;
-
 
 class BaseController extends AbstractController
 {
@@ -38,7 +38,7 @@ class BaseController extends AbstractController
             }
         }
         return $this->render('base/unite.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 
@@ -63,13 +63,61 @@ class BaseController extends AbstractController
     }
 
     #[Route('/liste-parcelle', name: 'app_liste-parcelle')]
-    public function listeContacts(ParcelleRepository $parcelleRepository): Response
+    public function listeContacts(Request $request, ParcelleRepository $parcelleRepository): Response
     {
         $parcelles = $parcelleRepository->findAll();
-        return $this->render('base/liste-parcelle.html.twig', [
-            'parcelles' => $parcelles
+        $form = $this->createForm(SupprimerParcelleType::class, null, [
+            'parcelles' => $parcelles,
+        ]);
 
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $selectedParcelles = $form->get('parcelles')->getData();
+            foreach ($selectedParcelles as $parcelles) {
+                $em->remove($parcelle);
+            }
+            $em->flush();
+
+            $this->addFlash('notice', 'Parcelles supprimées avec succès');
+            return $this->redirectToRoute('app_liste_parcelle');
+        }
+
+        return $this->render('base/liste-parcelle.html.twig', [
+            'parcelles' => $parcelles,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/modifier-parcelle/{id}', name: 'app_modifier_parcelle')]
+    public function modifierParcelle(Request $request, Parcelle $parcelle, EntityManagerInterface $em): Response
+    {
+        $form = $this->createForm(ModifierParcelleType::class, $parcelle);
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $em->persist($parcelle);
+                $em->flush();
+                $this->addFlash('notice', 'Parcelle modifiée');
+                return $this->redirectToRoute('app_liste-parcelle');
+            }
+        }
+
+        return $this->render('base/modifier-parcelle.html.twig', [
+            'form' => $form->createView(),
 
         ]);
     }
+
+    #[Route('/supprimer-parcelle/{id}', name: 'app_supprimer_parcelle')]
+    public function supprimerParcelle(Request $request, Parcelle
+         $parcelle, EntityManagerInterface $em): Response {
+        if ($parcelle != null) {
+            $em->remove($parcelle);
+            $em->flush();
+            $this->addFlash('notice', 'Parcelle supprimée');
+        }
+        return $this->redirectToRoute('app_liste-parcelle');
+    }
+
 }
