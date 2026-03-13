@@ -30,9 +30,16 @@ class Parcelle
     #[ORM\OneToMany(targetEntity: Culture::class, mappedBy: 'parcelle', orphanRemoval: true)]
     private Collection $cultures;
 
+    /**
+     * @var Collection<int, Epandre>
+     */
+    #[ORM\OneToMany(targetEntity: Epandre::class, mappedBy: 'parcelle')]
+    private Collection $epandres;
+
     public function __construct()
     {
         $this->cultures = new ArrayCollection();
+        $this->epandres = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -100,6 +107,36 @@ class Parcelle
             // set the owning side to null (unless already changed)
             if ($culture->getParcelle() === $this) {
                 $culture->setParcelle(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Epandre>
+     */
+    public function getEpandres(): Collection
+    {
+        return $this->epandres;
+    }
+
+    public function addEpandre(Epandre $epandre): static
+    {
+        if (!$this->epandres->contains($epandre)) {
+            $this->epandres->add($epandre);
+            $epandre->setParcelle($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEpandre(Epandre $epandre): static
+    {
+        if ($this->epandres->removeElement($epandre)) {
+            // set the owning side to null (unless already changed)
+            if ($epandre->getParcelle() === $this) {
+                $epandre->setParcelle(null);
             }
         }
 
