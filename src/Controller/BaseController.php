@@ -2,14 +2,15 @@
 namespace App\Controller;
 
 use App\Entity\Parcelle;
+use App\Entity\Unite;
 use App\Form\ParcelleType;
+use App\Form\UniteType;
+use App\Repository\ParcelleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Repository\ParcelleRepository;
-
 
 class BaseController extends AbstractController
 {
@@ -17,6 +18,26 @@ class BaseController extends AbstractController
     public function index(): Response
     {
         return $this->render('base/index.html.twig', [
+        ]);
+    }
+
+    #[Route('/unite', name: 'app_unite')]
+    public function unite(Request $request, EntityManagerInterface $em): Response
+    {
+        $unite = new Unite();
+        $form = $this->createForm(UniteType::class, $unite);
+
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $em->persist($unite);
+                $em->flush();
+                $this->addFlash('notice', 'Message envoyé');
+                return $this->redirectToRoute('app_unite');
+            }
+        }
+        return $this->render('base/unite.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 
@@ -45,9 +66,19 @@ class BaseController extends AbstractController
     {
         $parcelles = $parcelleRepository->findAll();
         return $this->render('base/liste-parcelle.html.twig', [
-            'parcelles' => $parcelles
-
+            'parcelles' => $parcelles,
 
         ]);
     }
+
+    #[Route('/modifier-parcelle/{id}', name: 'app_modifier_parcelle')]
+    public function modifierParcelle(Parcelle $parcelle): Response
+    {
+        $form = $this->createForm(ModifierParcelleType::class, $parcelle);
+        return $this->render('base/modifier-parcelle.html.twig', [
+            'form' => $form->createView()
+
+        ]);
+    }
+
 }

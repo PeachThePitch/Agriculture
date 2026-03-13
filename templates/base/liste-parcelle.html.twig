@@ -16,6 +16,7 @@
                                         <th scope="col">Nom</th>
                                         <th scope="col">Surface</th>
                                         <th scope="col">Coordonnées</th>
+                                        <th scope="col"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -24,7 +25,8 @@
                                             <td>{{ parcelle.nom | capitalize }}</td>
                                             <td>{{ parcelle.surface | capitalize }}</td>
                                             <td>{{ parcelle.coordonnees | lower }}</td>
-                                            
+                                            <td><a href="{{path("app_modifier_parcelle",{'id':parcelle.id})}}"><i class="bi bi-pen-filltext-dark"></i></a></td>
+
 
                                         </tr>
                                     {% endfor %}
